@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Select Menu Items for Order</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.error {
+			color: red;
+		}
+		.navbar {
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+	</style>
+	<script>
+		function toggleQuantity(checkbox, quantityId) {
+			const quantityBox = document.getElementById(quantityId);
+			quantityBox.disabled = !checkbox.checked;
+		}
+	</script>
+</head>
+
+<body>
+	<div class="container mt-4">
+		<h2 class="mb-4">Select Menu Items for Order</h2>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">
+			<img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+			Food Delivery Service</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/order}">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Customers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/driver}">Drivers</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<hr>
+		<a class="btn btn-secondary mb-4" th:href="@{/order}">Back to Order List</a>
+		<div class="card mb-4">
+			<div class="card-header">
+				Restaurant Details
+			</div>
+			<div class="card-body">
+				<p><strong>Restaurant ID:</strong> <span th:text="${restaurant.restaurantId}"></span></p>
+				<p><strong>Restaurant Name:</strong> <span th:text="${restaurant.name}"></span></p>
+				<p><strong>Restaurant Address:</strong> <span th:text="${restaurant.address}"></span></p>
+				<p><strong>Restaurant Phone:</strong> <span th:text="${restaurant.phone}"></span></p>
+			</div>
+		</div>
+		<div class="card mb-4">
+			<div class="card-header">
+				Customer Details
+			</div>
+			<div class="card-body">
+				<p><strong>Customer ID:</strong> <span th:text="${customer.customerId}"></span></p>
+				<p><strong>Customer Name:</strong> <span th:text="${customer.name}"></span></p>
+				<p><strong>Customer Email:</strong> <span th:text="${customer.email}"></span></p>
+				<p><strong>Customer Phone:</strong> <span th:text="${customer.phone}"></span></p>
+			</div>
+		</div>
+		<form th:action="@{/order/placeOrder}" th:object="${orderDto}" method="post" class="needs-validation"
+			novalidate>
+			<input type="hidden" th:field="*{orderDate}" placeholder="Order Date" />
+			<input type="hidden" name="customerId" th:value="${customer.customerId}" />
+			<input type="hidden" name="restaurantId" th:value="${restaurant.restaurantId}" />
+			<input type="hidden" th:field="*{orderStatus}" placeholder="Order Status" />
+			<div class="form-group">
+				<label>Choose Menu Items to add to Order with quantity:</label>
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+				<table class="table table-striped">
+					<tr>
+						<th>Selection</th>
+						<th>Quantity</th>
+						<th>MenuItem ID</th>
+						<th>MenuItem Name</th>
+						<th>MenuItem Description</th>
+						<th>MenuItem Price</th>
+					</tr>
+					<tr th:each="menuItem:${menuItems}">
+						<td><input type="checkbox" name="itemIds" th:value="${menuItem.itemId}"
+								th:id="'checkbox-' + ${menuItem.itemId}"
+								th:onclick="|toggleQuantity(this, 'quantity-' + ${menuItem.itemId})|" /></td>
+						<td><input type="text" name="quantities" th:id="'quantity-' + ${menuItem.itemId}"
+								placeholder="Quantity" disabled /></td>
+						<td th:text="${menuItem.itemId}"></td>
+						<td th:text="${menuItem.name}"></td>
+						<td th:text="${menuItem.description}"></td>
+						<td th:text="${menuItem.price}"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="form-group">
+				<label>Choose Coupons to apply on Order:</label>
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+				<table class="table table-striped">
+					<tr>
+						<th>Selection</th>
+						<th>Coupon ID</th>
+						<th>Coupon Code</th>
+						<th>Discount Amount</th>
+						<th>Expiry Date</th>
+					</tr>
+					<tr th:each="coupon : ${coupons}">
+						<td><input type="checkbox" name="couponIds" th:value="${coupon.couponId}" /></td>
+						<td th:text="${coupon.couponId}"></td>
+						<td th:text="${coupon.couponCode}"></td>
+						<td th:text="${coupon.discountAmount}"></td>
+						<td th:text="${coupon.expiryDate}"></td>
+					</tr>
+				</table>
+			</div>
+			<button type="submit" class="btn btn-primary">Place Order</button>
+		</form>
+		<a class="btn btn-secondary mt-3" th:href="@{/order}">Back to Order List</a>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

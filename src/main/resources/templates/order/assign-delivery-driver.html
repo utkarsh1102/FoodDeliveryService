@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Assign Delivery Driver</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.error {
+			color: red;
+		}
+		.navbar {
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+	</style>
+</head>
+
+<body>
+	<div class="container mt-4">
+		<h2 class="mb-4">Assign Delivery Driver</h2>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">
+				<img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+				Food Delivery Service</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/order}">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Customers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/driver}">Drivers</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<a class="btn btn-secondary mb-4" th:href="@{/order}">Back to Order List</a>
+		<form th:action="@{processDeliveryDriverAssignment(orderId=${orderId})}" method="post" class="needs-validation"
+			novalidate>
+			<div class="form-group">
+				Choose Delivery Driver who will deliver the order:
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+				<table class="table table-striped">
+					<tr>
+						<th>Selection</th>
+						<th>Delivery Driver ID</th>
+						<th>Delivery Driver Name</th>
+						<th>Delivery Driver Phone</th>
+						<th>Delivery Driver Vehicle</th>
+					</tr>
+					<tr th:each="driver : ${deliveryDrivers}">
+						<td><input type="radio" name="driverId" th:value="${driver.driverId}" />
+						</td>
+						<td th:text="${driver.driverId}"></td>
+						<td th:text="${driver.name}"></td>
+						<td th:text="${driver.phone}"></td>
+						<td th:text="${driver.vehicle}"></td>
+				</table>
+				<button type="submit" class="btn btn-primary">Assign Driver</button>
+		</form><br>
+		<a class="btn btn-secondary mt-3" th:href="@{/order}">Back to Order List</a>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

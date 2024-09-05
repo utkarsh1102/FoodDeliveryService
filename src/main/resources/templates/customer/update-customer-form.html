@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Customer</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .error {
+            color: red;
+        }
+        .navbar {
+            border-radius: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4">Update Customer</h2>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+                Food Delivery Service
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/order}">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/customer}">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/driver}">Drivers</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <a class="btn btn-secondary mb-4" th:href="@{/customer}">Back to Customer List</a>
+        <form th:action="@{/customer/processUpdateCustomerForm}" th:object="${customerDto}" method="post"
+            class="needs-validation" novalidate>
+            <input type="hidden" th:field="*{customerId}" />
+
+            <div class="form-group">
+                <label for="name">Customer Name:</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Customer Name" />
+                <ul class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                    <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Customer Email:</label>
+                <input type="text" id="email" th:field="*{email}" class="form-control" placeholder="Customer Email" />
+                <ul class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                    <li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Customer Phone:</label>
+                <input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="Customer Phone" />
+                <ul class="alert alert-danger" th:if="${#fields.hasErrors('phone')}">
+                    <li th:each="err : ${#fields.errors('phone')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label>Edit Addresses of the Customer</label>
+                <div th:each="address, iterStat : *{addresses}">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Address [[*{addresses[__${iterStat.index}__].addressId}]]
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" th:field="*{addresses[__${iterStat.index}__].addressId}" />
+                            <div class="form-group">
+                                <label for="addressLine1">Address Line 1:</label>
+                                <input type="text" id="addressLine1" th:field="*{addresses[__${iterStat.index}__].addressLine1}" class="form-control" placeholder="Address Line 1" />
+                            </div>
+                            <div class="form-group">
+                                <label for="addressLine2">Address Line 2:</label>
+                                <input type="text" id="addressLine2" th:field="*{addresses[__${iterStat.index}__].addressLine2}" class="form-control" placeholder="Address Line 2" />
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" th:field="*{addresses[__${iterStat.index}__].city}" class="form-control" placeholder="City" />
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State:</label>
+                                <input type="text" id="state" th:field="*{addresses[__${iterStat.index}__].state}" class="form-control" placeholder="State" />
+                            </div>
+                            <div class="form-group">
+                                <label for="postal">Postal Code:</label>
+                                <input type="text" id="postal" th:field="*{addresses[__${iterStat.index}__].postal}" class="form-control" placeholder="Postal Code" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Customer</button>
+        </form>
+
+        <a class="btn btn-secondary mt-3" th:href="@{/customer}">Back to Customer List</a>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

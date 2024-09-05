@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Place an Order</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.error {
+			color: red;
+		}
+
+		.navbar {
+			border-radius: 15px;
+			/* Adjust the value as needed */
+		}
+		.small-font-table {
+			font-size: 0.7rem;
+			/* Adjust this value as needed */
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container mt-4">
+		<h2 class="mb-4">Add New Restaurant</h2>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">
+				<img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+				Food Delivery Service</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/order}">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Customers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/driver}">Drivers</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<hr>
+		<a class="btn btn-secondary mb-4" th:href="@{/order}">Back to Order List</a>
+		<form th:action="@{showMenuItemsSelection}" th:object="${orderDto}" method="post" class="needs-validation"
+			novalidate>
+			<div class="form-group">
+				<label for="name">Order Date:</label>
+				<input type="datetime-local" id="orderDate" th:field="*{orderDate}" class="form-control"
+					placeholder="Order Date" />
+				<ul class="alert alert-danger" th:if="${#fields.hasErrors('orderDate')}">
+					<li th:each="err : ${#fields.errors('orderDate')}" th:text="${err}"></li>
+				</ul>
+			</div>
+			<div class="form-group">
+				<label>Choose Customer to place order for:</label>
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+				<table class="table table-striped">
+					<tr>
+						<th>Selection</th>
+						<th>Customer ID</th>
+						<th>Customer Name</th>
+						<th>Customer Email</th>
+						<th>Customer Phone</th>
+						<th>Customer Addresses</th>
+					</tr>
+					<tr th:each="customer : ${customers}">
+						<td><input type="radio" name="customerId" th:value="${customer.customerId}" />
+						</td>
+						<td th:text="${customer.customerId}"></td>
+						<td th:text="${customer.name}"></td>
+						<td th:text="${customer.email}"></td>
+						<td th:text="${customer.phone}"></td>
+						<td>
+							<table class="table table-sm small-font-table">
+								<thead>
+									<tr>
+										<th>Address ID</th>
+										<th>Address Line 1</th>
+										<th>Address Line 2</th>
+										<th>City</th>
+										<th>State</th>
+										<th>Postal</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="address : ${customer.addresses}">
+										<td th:text="${address.addressId}"></td>
+										<td th:text="${address.addressLine1}"></td>
+										<td th:text="${address.addressLine2}"></td>
+										<td th:text="${address.city}"></td>
+										<td th:text="${address.state}"></td>
+										<td th:text="${address.postal}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+				</table>
+			</div>
+			<div class="form-group">
+				<label>Choose Restaurant to place order from:</label>
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+				<table class="table table-striped">
+					<tr>
+						<th>Selection</th>
+						<th>Restaurant ID</th>
+						<th>Restaurant Name</th>
+						<th>Restaurant Address</th>
+					</tr>
+					<tr th:each="restaurant : ${restaurants}">
+						<td><input type="radio" name="restaurantId" th:value="${restaurant.restaurantId}" />
+						</td>
+						<td th:text="${restaurant.restaurantId}"></td>
+						<td th:text="${restaurant.name}"></td>
+						<td th:text="${restaurant.address}"></td>
+				</table>
+			</div>
+			<div class="form-group">
+				<label for="name">Order Status:</label>
+				<input type="text" id="orderStatus" th:field="*{orderStatus}" class="form-control"
+					placeholder="Order Status" />
+				<ul class="alert alert-danger" th:if="${#fields.hasErrors('orderStatus')}">
+					<li th:each="err : ${#fields.errors('orderStatus')}" th:text="${err}"></li>
+				</ul>
+			</div>
+			<button type="submit" class="btn btn-primary">Continue</button>
+		</form>
+		<a class="btn btn-secondary mt-3" th:href="@{/order}">Back to Order List</a>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

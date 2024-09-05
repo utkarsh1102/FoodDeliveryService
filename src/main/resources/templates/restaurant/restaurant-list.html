@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List of Restaurants</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		/* Table Styling */
+		table {
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			border: 1px solid #dee2e6;
+		}
+
+		/* Navbar Styling */
+		.navbar {
+			border-radius: 15px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container mt-4">
+		<h2 class="mb-4">List of Restaurants</h2>
+
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">
+				<img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+				Food Delivery Service
+			</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/order}">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Customers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/driver}">Drivers</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="d-flex justify-content-between mb-4">
+			<!-- Search Form -->
+			<form class="form-inline" th:action="@{/restaurant/search}" method="get">
+				<div class="form-group mr-2">
+					<input type="text" class="form-control" name="id" placeholder="Enter Restaurant ID">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+			</form>
+
+			<!-- Add New Restaurant Link -->
+			<a class="btn btn-info" th:href="@{/restaurant/showNewRestaurantForm}">Add New Restaurant</a>
+		</div>
+		<div class="alert alert-danger" th:if="${error != null}">
+			<span th:text="${error}"></span><br>
+		</div>
+		<!-- Success Message for Added Restaurant -->
+		<div class="alert alert-success" th:if="${restaurant != null}">
+			<strong>Restaurant added successfully!</strong><br>
+			<strong>Restaurant ID:</strong> <span th:text="${restaurant.restaurantId}"></span><br>
+			<strong>Restaurant Name:</strong> <span th:text="${restaurant.name}"></span><br>
+			<strong>Restaurant Address:</strong> <span th:text="${restaurant.address}"></span><br>
+			<strong>Restaurant Phone:</strong> <span th:text="${restaurant.phone}"></span><br>
+			<strong>Menu Items in the Restaurant:</strong>
+			<ul class="list-group mt-2">
+				<li class="list-group-item" th:each="menuItem:${restaurant.menuItems}" th:text="${menuItem}"></li>
+			</ul>
+		</div>
+
+		<!-- Restaurants Table -->
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Restaurant Name</th>
+					<th>Restaurant Address</th>
+					<th>Restaurant Phone</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="restaurant:${restaurants}">
+					<td th:text="${restaurant.restaurantId}"></td>
+					<td th:text="${restaurant.name}"></td>
+					<td th:text="${restaurant.address}"></td>
+					<td th:text="${restaurant.phone}"></td>
+					<td>
+						<div class="btn-group" role="group">
+							<a class="btn btn-warning btn-sm"
+								th:href="@{/restaurant/showUpdateFormForRestaurant(restaurantId=${restaurant.restaurantId})}">Update</a>
+							<a class="btn btn-danger btn-sm ml-2"
+								th:href="@{/restaurant/deleteRestaurant(restaurantId=${restaurant.restaurantId})}">Delete</a>
+							<a class="btn btn-info btn-sm ml-2"
+								th:href="@{/restaurant/showMenuForRestaurant(restaurantId=${restaurant.restaurantId})}">View
+								Menu</a>
+							<a class="btn btn-primary btn-sm ml-2"
+								th:href="@{/restaurant/showReviewsForRestaurant(restaurantId=${restaurant.restaurantId})}">Reviews</a>
+							<a class="btn btn-secondary btn-sm ml-2"
+								th:href="@{/restaurant/showDeliveryAreasForRestaurant(restaurantId=${restaurant.restaurantId})}">Delivery
+								Areas</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add New Restaurant</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.error {
+			color: red;
+		}
+		.navbar {
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+	</style>
+</head>
+
+<body>
+	<div class="container mt-4">
+		<h2 class="mb-4">Add New Restaurant</h2>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <a class="navbar-brand" href="#">
+            <img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+            Food Delivery Service</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/order}">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/customer}">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/driver}">Drivers</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+		<hr>
+		<a class="btn btn-secondary mb-4" th:href="@{/restaurant}">Back to Restaurant List</a>
+		<form th:action="@{/restaurant/processNewRestaurantForm}" th:object="${restaurantDto}" method="post"
+			class="needs-validation" novalidate>
+			<input type="hidden" th:field="*{restaurantId}" />
+
+			<div class="form-group">
+				<label for="name">Restaurant Name:</label>
+				<input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Restaurant Name" />
+				<ul class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+					<li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<label for="address">Restaurant Address:</label>
+				<input type="text" id="address" th:field="*{address}" class="form-control"
+					placeholder="Restaurant Address" />
+				<ul class="alert alert-danger" th:if="${#fields.hasErrors('address')}">
+					<li th:each="err : ${#fields.errors('address')}" th:text="${err}"></li>
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<label for="phone">Restaurant Phone:</label>
+				<input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="Restaurant Phone" />
+				<ul class="alert alert-danger" th:if="${#fields.hasErrors('phone')}">
+					<li th:each="err : ${#fields.errors('phone')}" th:text="${err}"></li>
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<label>Choose Menu Items to Add to the New Restaurant</label>
+				<div class="alert alert-danger" th:if="${error}">
+					<p th:text="${error}"></p>
+				</div>
+
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Selection</th>
+							<th>Menu Item ID</th>
+							<th>Menu Item Name</th>
+							<th>Menu Item Description</th>
+							<th>Menu Item Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="menuItem:${menuItems}">
+							<td><input type="checkbox" name="itemIds" th:value="${menuItem.itemId}"
+									th:checked="${itemIds.contains(menuItem.itemId)}"/>
+							</td>
+							<td th:text="${menuItem.itemId}"></td>
+							<td th:text="${menuItem.name}"></td>
+							<td th:text="${menuItem.description}"></td>
+							<td th:text="${menuItem.price}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Add Restaurant</button>
+		</form>
+
+		<a class="btn btn-secondary mt-3" th:href="@{/restaurant}">Back to Restaurant List</a>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

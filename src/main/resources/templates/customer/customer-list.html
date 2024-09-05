@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List of Customers</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		table {
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			border: 1px solid #dee2e6;
+		}
+
+		/* Custom CSS for reducing font size in the inner table */
+		.small-font-table {
+			font-size: 0.7rem;
+			/* Adjust this value as needed */
+		}
+		.navbar {
+            border-radius: 15px; /* Adjust the value as needed */
+        }
+	</style>
+</head>
+
+<body>
+	<div class="container mt-4">
+		<h2 class="mb-4">List of Customers</h2>
+
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+			<a class="navbar-brand" href="#">
+				<img th:src="@{/images/navbar-image.jpg}" width="50" height="50" class="d-inline-block" alt="">
+				Food Delivery Service</a>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/restaurant}">Restaurants</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/order}">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Customers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/driver}">Drivers</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="d-flex justify-content-between mb-4">
+			<form class="form-inline" th:action="@{/customer/search}" method="get">
+				<div class="form-group mr-2">
+					<input type="text" class="form-control" name="id" placeholder="Enter Customer ID">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		</div>
+		<div class="alert alert-danger" th:if="${error != null}">
+			<span th:text="${error}"></span><br>
+		</div>
+		<!-- Success Message -->
+		<div class="alert alert-success" th:if="${message != null}">
+			<span th:text="${message}"></span>
+		</div>
+
+		<div th:if="${customer != null}">
+			<div class="alert alert-success">
+				Customer Updated successfully<br>
+				<strong>Customer ID:</strong> <span th:text="${customer.customerId}"></span><br>
+				<strong>Customer Name:</strong> <span th:text="${customer.name}"></span><br>
+				<strong>Customer Email:</strong> <span th:text="${customer.email}"></span><br>
+				<strong>Customer Phone:</strong> <span th:text="${customer.phone}"></span><br>
+				<strong>Customer Addresses:</strong>
+				<ul class="list-group mt-2">
+					<li class="list-group-item" th:each="address:${customer.addresses}" th:text="${address}"></li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Customers Table -->
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Customer ID</th>
+					<th>Customer Name</th>
+					<th>Customer Email</th>
+					<th>Customer Phone</th>
+					<th>Customer Addresses</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="customer : ${customers}">
+					<td th:text="${customer.customerId}"></td>
+					<td th:text="${customer.name}"></td>
+					<td th:text="${customer.email}"></td>
+					<td th:text="${customer.phone}"></td>
+					<td>
+						<table class="table table-sm small-font-table">
+							<thead>
+								<tr>
+									<th>Address ID</th>
+									<th>Address Line 1</th>
+									<th>Address Line 2</th>
+									<th>City</th>
+									<th>State</th>
+									<th>Postal</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="address : ${customer.addresses}">
+									<td th:text="${address.addressId}"></td>
+									<td th:text="${address.addressLine1}"></td>
+									<td th:text="${address.addressLine2}"></td>
+									<td th:text="${address.city}"></td>
+									<td th:text="${address.state}"></td>
+									<td th:text="${address.postal}"></td>
+								</tr>
+							</tbody>
+						</table>
+					<td>
+						<div class="btn-group-vertical w-100" role="group">
+							<a class="btn btn-info btn-sm mb-2 btn-block"
+								th:href="@{/customer/showOrdersByCustomer(customerId=${customer.customerId})}">Show
+								Orders</a>
+							<a class="btn btn-primary btn-sm mb-2 btn-block"
+								th:href="@{/customer/showReviewsByCustomer(customerId=${customer.customerId})}">Show
+								Reviews</a>
+							<a class="btn btn-warning btn-sm mb-2 btn-block"
+								th:href="@{/customer/updateCustomer(customerId=${customer.customerId})}">Update</a>
+							<a class="btn btn-danger btn-sm mb-2 btn-block"
+								th:href="@{/customer/deleteCustomer(customerId=${customer.customerId})}">Delete</a>
+							<a class="btn btn-secondary btn-sm mb-2 btn-block"
+								th:href="@{/customer/addRestaurantsToCustomerFavorites(customerId=${customer.customerId})}">Add
+								Favorites</a>
+							<a class="btn btn-secondary btn-sm btn-block"
+								th:href="@{/customer/deleteRestaurantFromCustomerFavorites(customerId=${customer.customerId})}">Remove
+								Favorites</a>
+						</div>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
