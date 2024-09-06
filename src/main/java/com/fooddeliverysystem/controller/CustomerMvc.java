@@ -41,7 +41,6 @@ public class CustomerMvc {
 
     /**
      * Display a list of all customers.
-     * 
      * @param model the Model object to add attributes to
      * @return the name of the view template
      */
